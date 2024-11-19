@@ -1,14 +1,14 @@
-const { User } = require('../models/UserModel');
+const UserModal = require('../models/userModel');
 
 // Tạo người dùng mới
 const createUser = async (req, res) => {
     try {
         const { name, description ,age, avatar } = req.body;
-        const newUser = new User({ name, description, age, avatar });
+        const newUser = new UserModal({ name, description, age, avatar });
         await newUser.save();
-        res.status(201).json(newUser);
+        res.status(200).json(newUser);
     } catch (error) {
-        res.status(400).json({ message: "Lỗi khi tạo người dùng", error: error.message });
+        return res.status(500).json({ message: "Đã có lỗi từ hệ thống" });
     }
 };
 
@@ -23,49 +23,49 @@ const getAllUsers = async (req, res) => {
             query.name = { $regex: name, $options: 'i' };
         }
 
-        const users = await User.find(query);
+        const users = await UserModal.find(query);
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ message: "Đã có lỗi từ hệ thống", error: error.message });
+        return res.status(500).json({ message: "Đã có lỗi từ hệ thống" });
     }
 };
 
 // Lấy thông tin người dùng theo ID
 const getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await UserModal.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ message: "Người dùng không tồn tại" });
         }
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: "Đã có lỗi từ hệ thống", error: error.message });
+        return res.status(500).json({ message: "Đã có lỗi từ hệ thống" });
     }
 };
 
 // Cập nhật thông tin người dùng
 const updateUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const user = await UserModal.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!user) {
             return res.status(404).json({ message: "Người dùng không tồn tại" });
         }
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: "Đã có lỗi từ hệ thống", error: error.message });
+        return res.status(500).json({ message: "Đã có lỗi từ hệ thống" });
     }
 };
 
 // Xóa người dùng
 const deleteUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
-        if (!user) {
+        const user = await UserModal.findByIdAndDelete(req.params.id);
+        if(!user) {
             return res.status(404).json({ message: "Người dùng không tồn tại" });
         }
-        res.status(200).json({ message: "Người dùng đã bị xóa" });
+        res.status(200).json({ message: "Xóa người dùng thành công!" });
     } catch (error) {
-        res.status(500).json({ message: "Đã có lỗi từ hệ thống", error: error.message });
+        return res.status(500).json({ message: "Đã có lỗi từ hệ thống" });
     }
 };
 

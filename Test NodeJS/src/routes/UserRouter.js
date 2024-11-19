@@ -1,13 +1,13 @@
-// routes/userRoutes.js
 const express = require('express');
-const { createUser, getAllUsers, getUserById, updateUser, deleteUser } = require('../controllers/UserController');
-
+const { createUser, getAllUsers, getUserById, updateUser, deleteUser } = require('../controllers/userController');
+const { checkAuthenticated } = require('../middlewares/checkAuth');
+const validateUser = require('../middlewares/validateUser');
 const router = express.Router();
 
-// Định nghĩa các route cho API
-router.post('/users', createUser);
-router.put('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
+// Router API 
+router.post('/users', validateUser, checkAuthenticated, createUser);
+router.put('/users/:id', validateUser, checkAuthenticated, updateUser);
+router.delete('/users/:id', checkAuthenticated, deleteUser);
 router.get('/users/:id', getUserById);
 router.get('/users', getAllUsers);
 

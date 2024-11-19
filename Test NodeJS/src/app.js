@@ -1,24 +1,34 @@
 const express = require('express')
 const morgan = require('morgan')
+//routers
+const userRoutes = require('./routes/userRouter');
+const authRoutes = require('./routes/authRouter');
+const categoryRoutes = require('./routes/categoryRouter');
+const productRoutes = require('./routes/productRouter');
 
-const userRoutes = require('../src/routes/UserRouter')
-const { connectDB } = require('../src/config/database');
-const app = express()
+//db
+const { connectDB } = require('./config/database');
+
+const app = express();
 
 //Đọc file .env
 require('dotenv').config();
 
 //Connect DB
-connectDB()
+connectDB();
 
 //HTTP logger
-app.use(morgan('combined'))
+app.use(morgan('combined'));
 
 // Middleware để xử lý body request
 app.use(express.json());
 
+// Routers API 
 app.use('/shop', userRoutes);
-
+app.use('/shop/auth', authRoutes);
+app.use('/shop', categoryRoutes);
+app.use('/shop', productRoutes);
+// Listen PORT run
 app.listen(process.env.HOST, () => {
-  console.log(`Server đang chạy tại http://localhost:${process.env.HOST}`);
+  console.log(`Server run port: ${process.env.HOST}`);
 });
